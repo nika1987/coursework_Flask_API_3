@@ -15,7 +15,7 @@ def shell():
         "Genre": Genre,
         "Movie": Movie,
         #"User": User,
-        #"Director": Director
+        "Director": Director
     }
 
 
