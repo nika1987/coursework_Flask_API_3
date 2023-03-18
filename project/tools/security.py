@@ -1,5 +1,7 @@
 import base64
 import hashlib
+import hmac
+from typing import Union
 
 from flask import current_app
 
@@ -17,3 +19,8 @@ def generate_password_hash(password: str) -> str:
     return base64.b64encode(__generate_password_digest(password)).decode('utf-8')
 
 # TODO: [security] Описать функцию compose_passwords(password_hash: Union[str, bytes], password: str)
+
+
+def check_passwords(password_hash: Union[str, bytes], other_password: str) -> bool:
+    hash_digest: str = generate_password_hash(other_password)
+    return password_hash == hash_digest

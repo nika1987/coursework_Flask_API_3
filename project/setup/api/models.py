@@ -24,3 +24,12 @@ director: Model = api.model('Директор', {
     'id': fields.Integer(required=True, example=1),
     'name': fields.String(required=True, max_length=100, example='ФИО')
 })
+
+user: Model = api.model('Пользователь', {
+    'id': fields.Integer(required=True, example=1),
+    'email': fields.String(),
+    'password': fields.String(required=True, max_length=100, example='Пароль'),
+    'name': fields.String(required=True, max_length=100, example='Имя'),
+    'surname': fields.String(required=True, max_length=100, example='Фамилия'),
+    'favorite_genre': fields.List(fields.Nested(genre))
+})

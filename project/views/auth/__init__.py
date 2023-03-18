@@ -1,7 +1,7 @@
-from .auth import api as auth_ns
+from .auth import auth_new_ns
 from .user import api as user_ns
 
 __all__ = [
-    'auth_ns',
+    'auth_new_ns',
     'user_ns',
 ]
