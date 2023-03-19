@@ -25,11 +25,11 @@ class UserDAO(BaseDAO[User]):
     def get_one(self, uid):
         return self._db_session.query(User).get(uid)
 
-    def get_by_email(self, email: str) -> User:
+    def get_by_email(self, email):
         return self._db_session.query(User).filter(User.email == email).first()
 
-    def get_by_user_name(self, name: str):
-        self._db_session.query(User).filter(User.name == name).first()
+    def get_by_user_name(self, name):
+        return self._db_session.query(User).filter(User.name == name).first()
 
     def update_user(self, user_id: int, user_data: dict) -> User:
         user_found = self.get_by_id(user_id)
@@ -41,3 +41,4 @@ class UserDAO(BaseDAO[User]):
             user_found.name = user_data['name']
         self._db_session.commit()
         return user_found
+

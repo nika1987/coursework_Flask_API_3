@@ -10,7 +10,7 @@ auth_new_ns = Namespace('auth')
 class Auth(Resource):
     def post(self):
         """
-        регистрация пользователя по емайл и паролю
+        Регистрация пользователя по емайл и паролю
         """
         data = request.json
 
@@ -30,7 +30,7 @@ class LoginView(Resource):
     def post(self):
         data = request.json
         """
-            User has been authenticated, we return a response to the user in the form
+        Метод аутенфикации пользователя
         {
        "access_token": "qwesfsdfa",
        "refresh_token": "kjhgfgjakda",
@@ -47,7 +47,7 @@ class LoginView(Resource):
     def put(self):
         data = request.json
         """
-            Refresh token.
+        Получение нового access_token 
         """
         token = data.get("refresh_token")
         tokens = auth_service.approve_refresh_token(token)

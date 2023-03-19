@@ -8,6 +8,7 @@ from project.views import genres_ns, user_ns, movie_ns
 from project.views.auth.auth import auth_new_ns
 
 
+
 def base_service_error_handler(exception: BaseServiceError):
     return jsonify({'error': str(exception)}), exception.code
 

@@ -1,66 +1,53 @@
-from flask import request
+from flask import request, abort
 from flask_restx import Namespace, Resource
 
 from project.container import user_service
+from project.decorater import user_required
+from project.setup.api.models import user
 
-api = Namespace('user')
+
+api = Namespace('users')
 
 
-@api.route('/user')
+@api.route('/')
 class UsersView(Resource):
+    @user_required
+    @api.marshal_with(user, code=200, description="OK")  # сериализация
     def get(self):
         """
-        Получаем всех пользователей
+        Получить информацию о пользователе
         """
-        return user_service.get_all()
 
-    def post(self):
+        token = request.headers["Authorization"].split('Bearer ')[-1]
+        print(token)
+        user_data = user_service.get_by_token(token)
+        return user_data
+
+    @user_required
+    def patch(self):
         """
-        Добавляем нового пользователя
-
+        Обновляем частичные данные пользователя
         """
-        user_data = request.json
-        return user_service.create(user_data)
+        token = request.headers['Authorization'].split('Bearer ')[-1]
+        data_user = request.json
+        user_service.update_user(token, data_user)
+        return 'user data updated', 200
 
 
-@api.route('/<int:user_id>/')
+@api.route('/password/')
 class UserView(Resource):
-    def get(self, user_id: int):
-        """
-        Получаем пользователя по id
 
-        """
-        return user_service.get_one(user_id)
-
-    def patch(self, user_id: int):
-        """
-        Обновляем пользователя
-
-        """
-        user_data = api.payload
-        user_data['id'] = user_id
-        user_service.update(user_data)
-        return None, 200
-
-
-@api.route('/password')
-class UserView(Resource):
     def put(self):
-        data = request.json
         """
-        Добавляем пользователя
+        Меняем пароль пользователя
         """
-        email = data.get("email")
-        old_password = data.get("old_password")
-        new_password = data.get("new_password")
 
-        user = user_service.get_user_by_email(email)
-
-        if user_service.compare_passwords(user.password, old_password):
-            user_service.update_password({
-                "id": user.id,
-                "password": new_password
-            })
-            return "Password changed successfully", 201
+        data = request.headers['Authorization']
+        token = data.split('Bearer ')[-1]
+        user = user_service.get_by_token(token)
+        data_passwords = request.json
+        if data_passwords['password_1'] != data_passwords['password_2']:
+            user_service.update_password({'password': data_passwords['password_2']}, user.email)
+            return 'password updated', 200
         else:
-            return "Password did not changed", 400
+            return 'error password updated', 400

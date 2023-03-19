@@ -6,7 +6,6 @@ from project.setup.db import models
 
 class User(models.Base):
     __tablename__ = 'users'
-    id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
     password = Column(String(255))
     name = Column(String(255))
